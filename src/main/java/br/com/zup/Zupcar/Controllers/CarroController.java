@@ -40,16 +40,34 @@ public class CarroController {
 
   @PutMapping("/{nomeDoCarro}")
   public CarroDTO atualizarCarro(@PathVariable String nomeDoCarro, @RequestBody CarroDTO carroDTO) {
-    for (CarroDTO referencia : frota){
-      if (referencia.getModelo().equalsIgnoreCase(nomeDoCarro)){
-        referencia.setCor(referencia.getCor());
-        referencia.setMotor(referencia.getMotor());
-        referencia.setAno(referencia.getAno());
+    for (CarroDTO referencia : frota) {
+      if (referencia.getModelo().equalsIgnoreCase(nomeDoCarro)) {
+        referencia.setCor(carroDTO.getCor());
+        referencia.setMotor(carroDTO.getMotor());
+        referencia.setAno(carroDTO.getAno());
         return referencia;
       }
     }
-    throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
   }
+
+  @DeleteMapping("/{nomeDoCarro}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void excluirCarro(@PathVariable String nomeDoCarro) {
+    CarroDTO carroRemovido = null;
+    for (CarroDTO referencia : frota) {
+      if (referencia.getModelo().equalsIgnoreCase(nomeDoCarro)) {
+        carroRemovido = referencia;
+      }
+    }
+    frota.remove(carroRemovido);
+
+    if (carroRemovido == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+  }
+
 }
 
 
